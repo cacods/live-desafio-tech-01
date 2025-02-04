@@ -7,15 +7,26 @@ module "vpc" {
 
   azs             = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
   private_subnets = var.private_subnets
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  public_subnets  = var.public_subnets
 
   enable_nat_gateway = true
   enable_vpn_gateway = true
 
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${var.eks_name}" = "shared"
+    "kubernetes.io/role/elb"                = 1
+  }
+
+  private_subnet_tags = {
+    "kubernetes.io/cluster/${var.eks_name}" = "shared"
+    "kubernetes.io/role/internal-elb"       = 1
+  }
+
   tags = {
-    Terraform   = true
-    Environment = "dev"
-    Project     = var.sandbox_id
+    Terraform                               = true
+    Environment                             = "dev"
+    Project                                 = var.sandbox_id
+    "kubernetes.io/cluster/${var.eks_name}" = "shared"
   }
 
 }
@@ -24,7 +35,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.31"
 
-  cluster_name    = "${var.sandbox_id}-cluster"
+  cluster_name    = var.eks_name
   cluster_version = "1.31"
 
   cluster_endpoint_public_access = true
