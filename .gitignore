@@ -1,0 +1,8 @@
+.terraform
+
+
+# vim
+*.swp
+
+# ctags
+tags
