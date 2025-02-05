@@ -52,9 +52,9 @@ module "eks" {
 
   eks_managed_node_groups = {
     default = {
-      min_size       = 2
-      max_sieze      = 2
-      desired_size   = 2
+      min_size       = 4
+      max_sieze      = 4
+      desired_size   = 4
       instance_types = ["t3.small"]
     }
   }
