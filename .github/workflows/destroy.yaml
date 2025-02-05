@@ -1,15 +1,12 @@
-name: "Terraform apply"
+name: "Terraform destroy"
 
 on:
-  push:
-    branches: ["main"]
-    paths: ["src/**"]
-  workflow_dispatch:
+  workflow_dispatch: 
 
 jobs:
   terraform:
-    name: Terraform apply
-    runs-on: "ubuntu-22.04"
+    name: Terraform destroy
+    runs-on: ubuntu-22.04
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -24,9 +21,9 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./src
         run:
-          terraform init --backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}" --backend-config="key=${{ secrets.AWS_BUCKET_KEY }}"
+          terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}" -backend-config="key=${{ secrets.AWS_BUCKET_KEY }}" 
 
-      - name: Terraform apply
+      - name: Terraform destroy
         working-directory: ./src
         run:
-          terraform apply --auto-approve
+          terraform destroy --auto-approve
